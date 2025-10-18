@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tic tac toe</title>
+<style>
+body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;margin-top:20px;}
+table{border-collapse:collapse;margin-bottom:20px;}
+td{width:60px;height:60px;border:1px solid black;text-align:center;font-size:24px;cursor:pointer;}
+td.x{background-color:lightcoral;}
+td.o{background-color:lightblue;}
+#status{font-size:18px;font-weight:bold;}
+</style>
+</head>
+<body>
+<h1>tic tac toe</h1>
+<table id="board"></table>
+<p id="status">current player: x</p>
+<script>
+const size=3;
+let board=Array(size).fill(null).map(()=>Array(size).fill(''));
+let currentPlayer='x';
+const table=document.getElementById('board');
+const status=document.getElementById('status');
+function createBoard(){
+table.innerHTML='';
+for(let i=0;i<size;i++){
+let row=table.insertRow();
+for(let j=0;j<size;j++){
+let cell=row.insertCell();
+cell.className=board[i][j];
+cell.addEventListener('click',()=>makeMove(i,j));
+cell.textContent='';
+}}
+updateStatus();
+}
+function updateStatus(){
+status.textContent=`current player: ${currentPlayer}`;
+}
+function makeMove(i,j){
+if(board[i][j]!=='')return;
+board[i][j]=currentPlayer;
+currentPlayer=currentPlayer==='x'?'o':'x';
+createBoard();
+checkWinner();
+}
+function checkWinner(){
+const lines=[
+[[0,0],[0,1],[0,2]],[[1,0],[1,1],[1,2]],[[2,0],[2,1],[2,2]],
+[[0,0],[1,0],[2,0]],[[0,1],[1,1],[2,1]],[[0,2],[1,2],[2,2]],
+[[0,0],[1,1],[2,2]],[[0,2],[1,1],[2,0]]
+];
+for(let line of lines){
+const [a,b,c]=line;
+if(board[a[0]][a[1]]&&board[a[0]][a[1]]===board[b[0]][b[1]]&&board[a[0]][a[1]]===board[c[0]][c[1]]){
+setTimeout(()=>{alert(`${board[a[0]][a[1]]} wins!`);resetGame();},100);
+return;
+}}
+if(board.flat().every(cell=>cell!=='')){
+setTimeout(()=>{alert('tie game!');resetGame();},100);
+}}
+function resetGame(){
+board=Array(size).fill(null).map(()=>Array(size).fill(''));
+currentPlayer='x';
+createBoard();
+}
+createBoard();
+</script>
+</body>
+</html>
